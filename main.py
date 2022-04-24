@@ -1,6 +1,9 @@
+import numpy as np
+
 class Node:
   def __init__(self, children, max):
-    self.children = [max] * children
+    self.children = np.array([max] * children)
+    # self.children = np.full((1, children), max)
     self.children[-1] += 1
     self.size = children
     self.max = max
@@ -12,7 +15,7 @@ class Node:
       i -= 1
       if i == -1:
         return None
-        
+    
     self.children[i] -= 1
     return self.children
 
@@ -28,42 +31,48 @@ def getCombs(n, m, D, comparisonAlgo):
   node = Node(n, D)
   while True:
     nextNum = node.getNextNumber()
-    if nextNum == None:
+    if type(nextNum) == type(None):
       break
     adNum = nextNum[::]
     set = m
+    # print("Before:", end=" ")
+    # print(adNum, end=" ")
     while set < n:
       adNum = comparisonAlgo(adNum)
       set += 1
-    summed = sum(adNum)
+    # print("After: ", end=" ")
+    # print(adNum)
+    summed = adNum.sum()
     totalNum += summed
-    if sum(adNum) in combs.keys():
-      combs[sum(adNum)] += 1
+    if summed in combs.keys():
+      combs[summed] += 1
     else:
-      combs[sum(adNum)] = 1
+      combs[summed] = 1
     total +=1
 
   print(combs, total, totalNum / total)
 
 
 def removeSmallest(li):
-  li = li[::]
+  li = li.copy()
   # removes the smallest number from a list.
   num = (0, li[0])
   for i in range(1, len(li)):
     if num[1] > li[i]:
       num = (i, li[i])
-  li.pop(num[0])
+  # li.delete(num[0])
+  li = np.delete(li, num[0])
   return li
 
 def removeBiggest(li):
-  li = li[::]
+  li = li.copy()
   # removes the smallest number from a list.
   num = (0, li[0])
   for i in range(1, len(li)):
     if num[1] < li[i]:
       num = (i, li[i])
-  li.pop(num[0])
+  # li.delete(num[0])
+  li = np.delete(li, num[0])
   return li
 
-getCombs(4, 3, 6, removeSmallest)
+getCombs(6, 3, 6, removeSmallest)
