@@ -34,12 +34,9 @@ def getCombs(n, m, D, comparisonAlgo):
     if type(nextNum) == type(None):
       break
     adNum = nextNum[::]
-    set = m
     # print("Before:", end=" ")
     # print(adNum, end=" ")
-    while set < n:
-      adNum = comparisonAlgo(adNum)
-      set += 1
+    adNum = comparisonAlgo(adNum, n - m)
     # print("After: ", end=" ")
     # print(adNum)
     summed = adNum.sum()
@@ -52,18 +49,6 @@ def getCombs(n, m, D, comparisonAlgo):
 
   print(combs, total, totalNum / total)
 
-
-def removeSmallest(li):
-  li = li.copy()
-  # removes the smallest number from a list.
-  num = (0, li[0])
-  for i in range(1, len(li)):
-    if num[1] > li[i]:
-      num = (i, li[i])
-  # li.delete(num[0])
-  li = np.delete(li, num[0])
-  return li
-
 def removeBiggest(li):
   li = li.copy()
   # removes the smallest number from a list.
@@ -75,4 +60,13 @@ def removeBiggest(li):
   li = np.delete(li, num[0])
   return li
 
-getCombs(6, 3, 6, removeSmallest)
+def removeSmallests(li, amount):
+  if amount == 0:
+    return li
+  # removes the smallest numbers from a list.
+  li = li.copy()
+  li.sort(kind="quicksort")
+  li = np.delete(li, range(0, amount))
+  return li
+
+getCombs(10, 3, 6, removeSmallests)
